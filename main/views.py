@@ -4,9 +4,10 @@ from .models import Shoes
 
 
 # Create your views here.
-def index(request, page=1):
-    products = Shoes.objects.all()
+def index(request):
+    page = request.GET.get('page', 1)
 
+    products = Shoes.objects.all()
     paginator = Paginator(products, 3)  # Инициализируем пагинатор и определяем кол-во продуктов
     current_page = paginator.page(page)  # Текущая страница
 
