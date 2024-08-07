@@ -19,8 +19,17 @@
                                 <p> {{ product.description }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">{{ product.price }} $</button>
-{#                                        <button type="button" class="btn btn-sm btn-outline-secondary">+</button>#}
+                                        {% if product.sell == 0 %}
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-secondary">{{ product.price }} $
+                                            </button>
+                                        {% else %}
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-secondary"><s>{{ product.price }} $</s>
+                                            </button>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-secondary">{{ product.sell_price }} $</button>
+                                        {% endif %}
 
                                     </div>
                                 </div>

@@ -23,12 +23,12 @@ class Shoes(models.Model):
     price = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
     sell = models.PositiveSmallIntegerField(default=0)
 
+    def sell_price(self):
+        return self.price - self.price * self.sell / 100
+
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = 'Обувь'
         verbose_name_plural = 'Обувь'
-
-
-
