@@ -32,3 +32,4 @@ class Shoes(models.Model):
     class Meta:
         verbose_name = 'Обувь'
         verbose_name_plural = 'Обувь'
+        ordering = ['-id']
