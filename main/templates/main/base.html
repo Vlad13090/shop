@@ -22,7 +22,7 @@
             </a>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="#" class="nav-link px-2 text-secondary">Главная страница</a></li>
+                <li><a href="{% url 'main:index' %}" class="nav-link px-2 text-secondary">Главная страница</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">Поддержка</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">О сайте</a></li>
 
@@ -40,6 +40,7 @@
                     </div>
                 </li>
 
+
             </ul>
 
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
@@ -48,8 +49,8 @@
             </form>
 
             <div class="text-end">
-                <button type="button" class="btn btn-outline-light me-2">Войти</button>
-                <button type="button" class="btn btn-warning">Регистрация</button>
+                <a href="#" class="btn active" role="button" data-bs-toggle="button" aria-pressed="true">Вход</a>
+                <a href="#" class="btn btn-primary" role="button" data-bs-toggle="button">Регистрация</a>
             </div>
         </div>
     </div>
