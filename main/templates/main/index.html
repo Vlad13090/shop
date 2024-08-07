@@ -5,17 +5,13 @@
     <div class="album py-5 bg-body-tertiary">
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-
                 {% for product in products %}
-
                     <div class="col">
                         <div class="card shadow-sm">
-
                             <img class="bd-placeholder-img card-img-top" src="{{ product.image.url }}" alt=""
                                  width="100%" height="275" role="img">
-
                             <div class="card-body">
-                                <p class="card-text">{{ product.name }}</p>
+                                <p class="card-text"><a href="{% url 'main:detail' product.slug %}">{{ product.name }}</a></p>
                                 <p> {{ product.description }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
@@ -30,15 +26,12 @@
                                             <button type="button"
                                                     class="btn btn-sm btn-outline-secondary">{{ product.sell_price }} $</button>
                                         {% endif %}
-
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 {% endfor %}
-
             </div>
         </div>
     </div>
