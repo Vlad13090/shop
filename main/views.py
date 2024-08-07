@@ -5,10 +5,19 @@ from .models import Shoes
 
 # Create your views here.
 def index(request):
+    order_by = request.GET.get('order_by', None)
+    on_sale = request.GET.get('on_sale', None)
     page = request.GET.get('page', 1)
 
     products = Shoes.objects.all()
-    paginator = Paginator(products, 3)  # Инициализируем пагинатор и определяем кол-во продуктов
+
+    if on_sale:
+        products = products.filter(sell__gt=0)
+
+    if order_by and order_by != 'default':
+        products = products.order_by(order_by)
+
+    paginator = Paginator(products, 6)  # Инициализируем пагинатор и определяем кол-во продуктов
     current_page = paginator.page(page)  # Текущая страница
 
     return render(request, 'main/index.html', {'products': current_page})
