@@ -7,7 +7,7 @@ from .models import Shoes
 def index(request, page=1):
     products = Shoes.objects.all()
 
-    paginator = Paginator(products, 6)  # Инициализируем пагинатор и определяем кол-во продуктов
+    paginator = Paginator(products, 3)  # Инициализируем пагинатор и определяем кол-во продуктов
     current_page = paginator.page(page)  # Текущая страница
 
     return render(request, 'main/index.html', {'products': current_page})
