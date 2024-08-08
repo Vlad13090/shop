@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 from .models import Shoes
+from .utils import g_search
 
 
 # Create your views here.
@@ -8,8 +9,12 @@ def index(request):
     order_by = request.GET.get('order_by', None)
     on_sale = request.GET.get('on_sale', None)
     page = request.GET.get('page', 1)
+    query = request.GET.get('q', None)
 
-    products = Shoes.objects.all()
+    if query:
+        products = g_search(query)
+    else:
+        products = Shoes.objects.all()
 
     if on_sale:
         products = products.filter(sell__gt=0)
