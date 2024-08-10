@@ -7,44 +7,55 @@
         <div class="container">
 
             <div class="dropdown mb-2">
-                            <button class="btn btn-secondary dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Фильтры
-                            </button>
+                <button class="btn btn-secondary dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    Фильтры
+                </button>
 
-                            <form action="{% if request.GET.q %}{% url 'main:search' %}{% else %}{% url 'main:index' %} {% endif %}" method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
-                                <div class="form-check text-white mx-3">
-                                    <input class="form-check-input" type="checkbox" name="on_sale" id="flexCheckDefault" value="on" {% if request.GET.on_sale == 'on' %} checked {% endif %}>
-                                    {% if request.GET.q %}
-                                    	<input type="hidden" name="q" value="{{ request.GET.q }}">
-                                    {% endif %}
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        Товары по акции
-                                    </label>
-                                </div>
-                                <p class="text-white mx-3 mt-3">Сортировать:</p>
-                                <div class="form-check text-white mx-3">
-                                    <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault1" value="default" checked>
-                                    <label class="form-check-label" for="flexRadioDefault1">
-                                        По умолчанию
-                                    </label>
-                                </div>
-                                <div class="form-check text-white mx-3">
-                                    <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault2" value="price" {% if request.GET.order_by == 'price' %} checked {% endif %}>
-                                    <label class="form-check-label" for="flexRadioDefault2">
-                                        От дешевых к дорогим
-                                    </label>
-                                </div>
-                                <div class="form-check text-white mx-3">
-                                    <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault3" value="-price" {% if request.GET.order_by == '-price' %} checked {% endif %}>
-                                    <label class="form-check-label" for="flexRadioDefault3">
-                                        От дорогих к дешевым
-                                    </label>
-                                </div>
-                                <button type="submit" class="btn btn-primary mx-3 mt-3">Применить</button>
-                            </form>
-                        </div>
-
+                <form action="{% if request.GET.q %}{% url 'main:search' %}{% else %}{% url 'main:index' %} {% endif %}"
+                      method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
+                    <div class="form-check text-white mx-3">
+                        <input class="form-check-input" type="checkbox" name="on_sale" id="flexCheckDefault" value="on"
+                                {% if request.GET.on_sale == 'on' %} checked {% endif %}>
+                        {% if request.GET.q %}
+                            <input type="hidden" name="q" value="{{ request.GET.q }}">
+                        {% endif %}
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Товары по акции
+                        </label>
+                    </div>
+                    <p class="text-white mx-3 mt-3">Сортировать:</p>
+                    <div class="form-check text-white mx-3">
+                        <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault1"
+                               value="default" checked>
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            По умолчанию
+                        </label>
+                    </div>
+                    <div class="form-check text-white mx-3">
+                        <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault2"
+                               value="price" {% if request.GET.order_by == 'price' %} checked {% endif %}>
+                        <label class="form-check-label" for="flexRadioDefault2">
+                            От дешевых к дорогим
+                        </label>
+                    </div>
+                    <div class="form-check text-white mx-3">
+                        <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault3"
+                               value="-price" {% if request.GET.order_by == '-price' %} checked {% endif %}>
+                        <label class="form-check-label" for="flexRadioDefault3">
+                            От дорогих к дешевым
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary mx-3 mt-3">Применить</button>
+                </form>
+            </div>
+            {% if request.GET.q %}
+                <h3 style="text-align: center">Результат поиска по запросу "{{ request.GET.q }}"</h3>
+                {% if not products %}
+                    <br>
+                    <h3 style="text-align: center">Товаров не найдено</h3>
+                {% endif %}
+            {% endif %}
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 {% for product in products %}
                     <div class="col">
@@ -78,40 +89,31 @@
 
         <br>
 
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
+        {% if products %}
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
 
-                <li class="page-item {% if not products.has_previous %} disabled {% endif %}">
-                    <a class="page-link"
-                       href="{% if products.has_previous %} ?{% params page=products.previous_page_number %}
+                    <li class="page-item {% if not products.has_previous %} disabled {% endif %}">
+                        <a class="page-link"
+                           href="{% if products.has_previous %} ?{% params page=products.previous_page_number %}
                     {% endif %}">Назад</a>
-                </li>
+                    </li>
 
-                {% for page in products.paginator.page_range %}
-                    {% if page >= products.number|add:-2 and page <= products.number|add:2 %}
-                        <li class="page-item {% if products.number == page %} active {% endif %}">
-                            <a class="page-link" href="?{% params page=page %}">{{ page }}</a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
+                    {% for page in products.paginator.page_range %}
+                        {% if page >= products.number|add:-2 and page <= products.number|add:2 %}
+                            <li class="page-item {% if products.number == page %} active {% endif %}">
+                                <a class="page-link" href="?{% params page=page %}">{{ page }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
 
-                <li class="page-item {% if not products.has_next %} disabled {% endif %}">
-                    <a class="page-link"
-                       href="{% if products.has_next %} ?{% params page=products.next_page_number %} {% endif %}">Следующая</a>
-                </li>
-            </ul>
-        </nav>
-
-        <footer class="py-3 my-4">
-            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-                <li class="nav-item"><a href="{% url 'main:index' %}" class="nav-link px-2 text-body-secondary">Главная
-                    страница</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Поддержка</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">О сайте</a></li>
-            </ul>
-            <p class="text-center text-body-secondary">© 2024 ShopShoes, Inc</p>
-        </footer>
-
+                    <li class="page-item {% if not products.has_next %} disabled {% endif %}">
+                        <a class="page-link"
+                           href="{% if products.has_next %} ?{% params page=products.next_page_number %} {% endif %}">Следующая</a>
+                    </li>
+                </ul>
+            </nav>
+        {% endif %}
     </div>
 
 
