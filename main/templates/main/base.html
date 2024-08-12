@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,33 +36,34 @@
                         </ul>
                     </li>
                     {% if not user.is_authenticated %}
-                    	<li class="nav-item">
-                        <a class="nav-link  text-white" href="{% url 'user:register'%}">Регистрация</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link  text-white" href="{% url 'user:login' %}">Войти</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link  text-white" href="{% url 'user:register' %}">Регистрация</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link  text-white" href="{% url 'user:login' %}">Войти</a>
+                        </li>
                     {% else %}
 
-                    <li class="nav-item dropdown ">
-                        <a class="nav-link dropdown-toggle text-white" href="#" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            Мой профиль
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item  text-white" href="#">Корзина</a></li>
-                            <li><a class="dropdown-item  text-white" href="#">Личный кабинет</a></li>
+                        <li class="nav-item dropdown ">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Мой профиль
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item  text-white" href="#">Корзина</a></li>
+                                <li><a class="dropdown-item  text-white" href="{% url 'user:profile' %}">Личный
+                                    кабинет</a></li>
 
-                            {% if user.is_superuser or user.is_staff %}
-                            <li><a class="dropdown-item  text-white" href="admin/">Админ панель</a></li>
-                            {% endif %}
+                                {% if user.is_superuser or user.is_staff %}
+                                    <li><a class="dropdown-item  text-white" href="admin/">Админ панель</a></li>
+                                {% endif %}
 
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item  text-white" href="{% url 'user:logout' %}">Выйти</a></li>
-                        </ul>
-                    </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item  text-white" href="{% url 'user:logout' %}">Выйти</a></li>
+                            </ul>
+                        </li>
                     {% endif %}
                 </ul>
                 <form class="d-flex" role="search" action="{% url 'main:search' %}" method="get">
@@ -72,8 +75,37 @@
     </nav>
 </header>
 
-{% block content %}{% endblock %}
+{#<div class="container mt-4">#}
+{#    <div class="row justify-content-center">#}
+{#        <div class="col-md-6">#}
+{#            {% if messages %}#}
+{#                {% for message in messages %}#}
+{#                    {% if message.tags == 'success' %}#}
+{#                        <div id="notification"#}
+{#                             class="position-fixed start-50 translate-middle-x z-3 alert alert-success fade show custom-shadow"#}
+{#                             role="alert">#}
+{#                            {{ message }}#}
+{#                        </div>#}
+{#                    {% endif %}#}
+{#                    {% if message.tags == 'warning' %}#}
+{#                        <div id="notification"#}
+{#                             class="position-fixed start-50 translate-middle-x z-3 alert alert-danger fade show custom-shadow"#}
+{#                             role="alert">#}
+{#                            {{ message }}#}
+{#                        </div>#}
+{#                    {% endif %}#}
+{#                {% endfor %}#}
+{#            {% else %}#}
+{#                <div id="jq-notification"#}
+{#                     class="position-fixed start-50 translate-middle-x z-3 alert alert-success fade show custom-shadow"#}
+{#                     style="display: none;" role="alert">#}
+{#                </div>#}
+{#            {% endif %}#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
 
+{% block content %}{% endblock %}
 
 </body>
 </html>
