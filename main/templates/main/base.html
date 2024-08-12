@@ -33,12 +33,15 @@
                             <li><a class="dropdown-item  text-white" href="#">Про нас</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link  text-white" href="#">Корзина</a>
+                    {% if not user.is_authenticated %}
+                    	<li class="nav-item">
+                        <a class="nav-link  text-white" href="{% url 'user:register'%}">Регистрация</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link  text-white" href="{% url 'user:login' %}">Войти</a>
                     </li>
+                    {% else %}
+
                     <li class="nav-item dropdown ">
                         <a class="nav-link dropdown-toggle text-white" href="#" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
@@ -46,15 +49,19 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item  text-white" href="#">Корзина</a></li>
-                            <li><a class="dropdown-item  text-white" href="#">Личный кабинет</a>
-                            </li>
+                            <li><a class="dropdown-item  text-white" href="#">Личный кабинет</a></li>
+
+                            {% if user.is_superuser or user.is_staff %}
                             <li><a class="dropdown-item  text-white" href="admin/">Админ панель</a></li>
+                            {% endif %}
+
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item  text-white" href="#">Выйти</a></li>
+                            <li><a class="dropdown-item  text-white" href="{% url 'user:logout' %}">Выйти</a></li>
                         </ul>
                     </li>
+                    {% endif %}
                 </ul>
                 <form class="d-flex" role="search" action="{% url 'main:search' %}" method="get">
                     <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search" name="q">
@@ -70,8 +77,3 @@
 
 </body>
 </html>
-
-{# <form class="d-flex" role="search" action="{% url 'main:search' %}" method="get">#}
-{#                <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search" name="q">#}
-{#                <button class="btn btn-outline-success text-white" type="submit">Найти</button>#}
-{#            </form>#}
