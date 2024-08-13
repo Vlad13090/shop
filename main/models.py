@@ -24,7 +24,10 @@ class Shoes(models.Model):
     sell = models.PositiveSmallIntegerField(default=0)
 
     def sell_price(self):
-        return self.price - self.price * self.sell / 100
+        if self.sell:
+            return self.price - self.price * self.sell / 100
+        else:
+            return self.price
 
     def __str__(self):
         return self.name

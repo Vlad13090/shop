@@ -31,3 +31,7 @@ def index(request):
 def detail(request, slug_product):
     products = get_object_or_404(Shoes, slug=slug_product)
     return render(request, 'main/detail.html', {'products': products})
+
+
+# def user_cart(request):
+#     return render(request, 'carts/carts.html')
