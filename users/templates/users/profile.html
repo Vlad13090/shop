@@ -128,7 +128,7 @@
                                                 </div>
                                                 <div class="col p-0"><strong>{{ cart.product_price }} $</strong></div>
                                                 <div class="col p-0">
-                                                    <a href="#" class="remove-from-cart" data-cart-id="">
+                                                    <a href="{% url 'cart:cart_remove' cart.id %}" class="remove-from-cart" data-cart-id="">
                                                         <img class="mx-1"
                                                              src="{% static 'carts/image/trash3-fill.svg' %}"
                                                              alt="Catalog Icon" width="16" height="16">
@@ -148,9 +148,13 @@
                             </div>
                             <!-- Закончилась разметка корзины -->
                         </div>
-                        <a class="btn btn-dark" href="../orders/create_order.html">
+
+                        {% if carts %}
+                        	<a class="btn btn-dark" href="../orders/create_order.html">
                             Оформить заказ
                         </a>
+                        {% endif %}
+
                     </div>
                 </div>
                 <!-- Оформленные заказы -->
