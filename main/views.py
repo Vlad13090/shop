@@ -1,5 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
+from django.views.generic import DetailView
+
 from .models import Shoes
 from .utils import g_search
 
@@ -28,10 +30,13 @@ def index(request):
     return render(request, 'main/index.html', {'products': current_page})
 
 
-def detail(request, slug_product):
-    products = get_object_or_404(Shoes, slug=slug_product)
-    return render(request, 'main/detail.html', {'products': products})
+# def detail(request, slug_product):
+#     products = get_object_or_404(Shoes, slug=slug_product)
+#     return render(request, 'main/detail.html', {'products': products})
 
+class DetailShoesView(DetailView):
+    template_name = 'main/detail.html'
+    context_object_name = 'product'
 
-# def user_cart(request):
-#     return render(request, 'carts/carts.html')
+    def get_object(self, queryset=None):
+        return get_object_or_404(Shoes, slug=self.kwargs['slug_product'])
