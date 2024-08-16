@@ -5,6 +5,7 @@ from django.db.models import Prefetch
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView
 
 from orders.models import Order, OrderItem
 from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
@@ -33,18 +34,31 @@ class UserLoginView(LoginView):
     success_url = reverse_lazy('main:index')
 
 
-def register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(data=request.POST)
-        if form.is_valid():
+# def register(request):
+#     if request.method == 'POST':
+#         form = UserRegistrationForm(data=request.POST)
+#         if form.is_valid():
+#             form.save()
+#             user = form.instance
+#             auth.login(request, user)
+#             # messages.success(request, 'Вы успешно зарегистрировались')
+#             return HttpResponseRedirect(reverse('main:index'))
+#     else:
+#         form = UserRegistrationForm()
+#     return render(request, 'users/registration.html', {'form': form})
+
+
+class UserRegistrationView(CreateView):
+    template_name = 'users/registration.html'
+    form_class = UserRegistrationForm
+    success_url = reverse_lazy('main:index')
+
+    def form_valid(self, form):
+        user = form.instance
+        if user:
             form.save()
-            user = form.instance
-            auth.login(request, user)
-            # messages.success(request, 'Вы успешно зарегистрировались')
-            return HttpResponseRedirect(reverse('main:index'))
-    else:
-        form = UserRegistrationForm()
-    return render(request, 'users/registration.html', {'form': form})
+            auth.login(self.request, user)
+        return HttpResponseRedirect(self.success_url)
 
 
 @login_required
