@@ -1,11 +1,12 @@
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.db.models import Prefetch
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 
 from orders.models import Order, OrderItem
 from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
@@ -68,24 +69,45 @@ def logout(request):
     return HttpResponseRedirect(reverse('main:index'))
 
 
-@login_required
-def profile(request):
-    if request.method == 'POST':
-        form = UserProfileForm(data=request.POST, instance=request.user, files=request.FILES)
-        if form.is_valid():
-            form.save()
-            # messages.success(request, 'Профиль обновлен')
-            return HttpResponseRedirect(reverse('user:profile'))
-    else:
-        form = UserProfileForm(instance=request.user)
+# @login_required
+# def profile(request):
+#     if request.method == 'POST':
+#         form = UserProfileForm(data=request.POST, instance=request.user, files=request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             # messages.success(request, 'Профиль обновлен')
+#             return HttpResponseRedirect(reverse('user:profile'))
+#     else:
+#         form = UserProfileForm(instance=request.user)
+#
+#     orders = (
+#         Order.objects.filter(user=request.user)
+#         .prefetch_related(
+#             Prefetch(
+#                 'order_item',
+#                 queryset=OrderItem.objects.select_related('product'),
+#             )
+#         ).order_by('-id')
+#     )
+#     return render(request, 'users/profile.html', {"form": form, "orders": orders})
 
-    orders = (
-        Order.objects.filter(user=request.user)
-        .prefetch_related(
-            Prefetch(
-                'order_item',
-                queryset=OrderItem.objects.select_related('product'),
-            )
-        ).order_by('-id')
-    )
-    return render(request, 'users/profile.html', {"form": form, "orders": orders})
+class UserProfileView(LoginRequiredMixin, UpdateView):
+    template_name = 'users/profile.html'
+    form_class = UserProfileForm
+    success_url = reverse_lazy('users:profile')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['orders'] = (
+            Order.objects.filter(user=self.request.user)
+            .prefetch_related(
+                Prefetch(
+                    'order_item',
+                    queryset=OrderItem.objects.select_related('product'),
+                )
+            ).order_by('-id')
+        )
+        return context
