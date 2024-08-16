@@ -1,30 +1,36 @@
-from django.contrib import auth, messages
+from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
 from django.db.models import Prefetch
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from orders.models import Order, OrderItem
 from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
 
 
 # Create your views here.
-def login(request):
-    if request.method == 'POST':
-        form = UserLoginForm(data=request.POST)
-        if form.is_valid():
-            username = request.POST['username']
-            password = request.POST['password']
-            user = auth.authenticate(username=username, password=password)
-            if user:
-                auth.login(request, user)
-                # messages.success(request, f'Добро пожаловать, {username}')
-                return HttpResponseRedirect(reverse('main:index'))
-    else:
-        form = UserLoginForm()
+# def login(request):
+#     if request.method == 'POST':
+#         form = UserLoginForm(data=request.POST)
+#         if form.is_valid():
+#             username = request.POST['username']
+#             password = request.POST['password']
+#             user = auth.authenticate(username=username, password=password)
+#             if user:
+#                 auth.login(request, user)
+#                 # messages.success(request, f'Добро пожаловать, {username}')
+#                 return HttpResponseRedirect(reverse('main:index'))
+#     else:
+#         form = UserLoginForm()
+#
+#     return render(request, 'users/login.html', {'form': form})
 
-    return render(request, 'users/login.html', {'form': form})
+class UserLoginView(LoginView):
+    template_name = 'users/login.html'
+    form_class = UserLoginForm
+    success_url = reverse_lazy('main:index')
 
 
 def register(request):
