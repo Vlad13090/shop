@@ -1,33 +1,58 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 
 from .models import Shoes
 from .utils import g_search
 
 
 # Create your views here.
-def index(request):
-    order_by = request.GET.get('order_by', None)
-    on_sale = request.GET.get('on_sale', None)
-    page = request.GET.get('page', 1)
-    query = request.GET.get('q', None)
+# def index(request):
+#     order_by = request.GET.get('order_by', None)
+#     on_sale = request.GET.get('on_sale', None)
+#     page = request.GET.get('page', 1)
+#     query = request.GET.get('q', None)
+#
+#     if query:
+#         products = g_search(query)
+#     else:
+#         products = Shoes.objects.all()
+#
+#     if on_sale:
+#         products = products.filter(sell__gt=0)
+#
+#     if order_by and order_by != 'default':
+#         products = products.order_by(order_by)
+#
+#     paginator = Paginator(products, 6)  # Инициализируем пагинатор и определяем кол-во продуктов
+#     current_page = paginator.page(page)  # Текущая страница
+#
+#     return render(request, 'main/index.html', {'products': current_page})
 
-    if query:
-        products = g_search(query)
-    else:
-        products = Shoes.objects.all()
+class IndexView(ListView):
+    template_name = 'main/index.html'
+    context_object_name = 'products'
+    paginate_by = 6
+    allow_empty = True  # Разрешение для отображения пустой страницы
 
-    if on_sale:
-        products = products.filter(sell__gt=0)
+    def get_queryset(self):
+        # category_slug = self.kwargs.get('slug_product')
+        order_by = self.request.GET.get('order_by', None)
+        on_sale = self.request.GET.get('on_sale', None)
+        query = self.request.GET.get('q', None)
 
-    if order_by and order_by != 'default':
-        products = products.order_by(order_by)
+        if query:
+            products = g_search(query)
+        else:
+            products = Shoes.objects.all()
 
-    paginator = Paginator(products, 6)  # Инициализируем пагинатор и определяем кол-во продуктов
-    current_page = paginator.page(page)  # Текущая страница
+        if on_sale:
+            products = products.filter(sell__gt=0)
 
-    return render(request, 'main/index.html', {'products': current_page})
+        if order_by and order_by != 'default':
+            products = products.order_by(order_by)
+
+        return products
 
 
 # def detail(request, slug_product):
