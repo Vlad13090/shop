@@ -4,11 +4,13 @@ from rest_framework.response import Response
 
 from API.serializers import ShoesSerializer
 from main.models import Shoes, Category
+from .permissions import IsAdminOrReadOnly
 
 
 class ShoesViewSet(viewsets.ModelViewSet):
     # queryset = Shoes.objects.all()
     serializer_class = ShoesSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
         pk = self.kwargs.get('pk')
